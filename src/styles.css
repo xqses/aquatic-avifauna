@@ -1,0 +1,11 @@
+@import "fonts.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "THICCCBOI Body";
+  font-style: normal;
+  font-weight: 400;
+  src: url(assets/fonts/THICCCBOI-Light.woff2) format("woff2");
+}

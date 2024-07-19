@@ -1,0 +1,23 @@
+<article class="h-full w-full flex flex-col">
+  <h2 class="font-title text-lg ml-8 mt-6">Your positions</h2>
+  <section
+    class="card-container w-full p-8"
+    *ngIf="positionsData$ | async as positions"
+  >
+    <div class="card-wrapper m-4">
+      <app-card
+        ><app-position [data]="positions[0]" [index]="0"></app-position
+      ></app-card>
+    </div>
+    <div class="card-wrapper m-4">
+      <app-card
+        ><app-position [data]="positions[1]" [index]="1"></app-position
+      ></app-card>
+    </div>
+    <div class="card-wrapper m-4">
+      <app-card
+        ><app-position [data]="positions[2]" [index]="2"></app-position
+      ></app-card>
+    </div>
+  </section>
+</article>

@@ -1,0 +1,21 @@
+/* On screens that are 900px or less, because otherwise the graphs start looking pretty bad */
+@media screen and (min-width: 900px) {
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (max-width: 900px) {
+  .card-container {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
+.card-wrapper {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+.card-wrapper:last-child {
+  grid-column: span 2;
+  grid-row: span 2;
+}

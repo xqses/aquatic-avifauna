@@ -1,0 +1,18 @@
+.arrow-up {
+  position: relative;
+}
+.arrow-up::before {
+  content: "\25B2";
+  position: absolute;
+  right: 8px;
+  top: 20%;
+}
+.arrow-down {
+  position: relative;
+}
+.arrow-down::before {
+  content: "\25BC";
+  position: absolute;
+  right: 8px;
+  top: 20%;
+}

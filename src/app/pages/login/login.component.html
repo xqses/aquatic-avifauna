@@ -1,0 +1,10 @@
+<article class="w-screen h-screen flex flex-col justify-center items-center">
+  <h1 class="font-title text-4xl p-4">{{ "Please enter your name " }}</h1>
+  <input
+    type="text"
+    [(ngModel)]="textInput"
+    class="p-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-52"
+    placeholder="What should I be called?"
+  />
+  <button class="p-4" (click)="submitLogin()">Submit</button>
+</article>

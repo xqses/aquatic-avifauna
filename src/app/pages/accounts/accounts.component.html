@@ -1,0 +1,327 @@
+<article class="h-full w-full flex flex-col justify-between" #accountsContainer>
+  <section class="flex w-full justify-between p-8">
+    <h2 class="font-title text-lg">Your accounts</h2>
+    <button
+      type="button"
+      class="bg-blue-500 hover:bg-blue-600 text-gray-800 font-bold py-2 px-4 rounded inline-flex justify-center items-center w-40"
+      [disabled]="isRefreshing"
+      (click)="refreshAccountData()"
+    >
+      <svg
+        *ngIf="isRefreshing"
+        class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      {{ isRefreshing ? "Refreshing..." : "Refresh data" }}
+    </button>
+  </section>
+
+  <section
+    class="mx-12 my-2 border-gray-400 lg:border-gray-400 bg-white p-6 flex flex-col relative overflow-x-auto"
+    *ngIf="isLargeViewport$ | async; else columnView"
+  >
+    <app-filter-input
+      [placeholder]="'Search for account ID'"
+      (filterSearchStringChange)="updateFilterSearchString($event)"
+    ></app-filter-input>
+    <table
+      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    >
+      <thead
+        class="text-xs text-gray-700 uppercase bg-gray-50"
+        *ngIf="sortInfo$ | async as sortInfo"
+      >
+        <tr>
+          <th
+            scope="col"
+            class="px-6 py-3 hover:cursor-pointer font-title"
+            [ngClass]="
+              sortInfo.key === 'id'
+                ? sortInfo.order === 'asc'
+                  ? 'arrow-down'
+                  : 'arrow-up'
+                : ''
+            "
+            (click)="updateFilterSort('id')"
+          >
+            ID
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 hover:cursor-pointer font-title"
+            [ngClass]="
+              sortInfo.key === 'accountId'
+                ? sortInfo.order === 'asc'
+                  ? 'arrow-down'
+                  : 'arrow-up'
+                : ''
+            "
+            (click)="updateFilterSort('accountId')"
+          >
+            Account ID
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 hover:cursor-pointer font-title"
+            [ngClass]="
+              sortInfo.key === 'balance'
+                ? sortInfo.order === 'asc'
+                  ? 'arrow-down'
+                  : 'arrow-up'
+                : ''
+            "
+            (click)="updateFilterSort('balance')"
+          >
+            Balance
+          </th>
+          <th
+            scope="col"
+            [ngClass]="
+              sortInfo.key === 'currency'
+                ? sortInfo.order === 'asc'
+                  ? 'arrow-down'
+                  : 'arrow-up'
+                : ''
+            "
+            class="px-6 py-3 hover:cursor-pointer font-title"
+            (click)="updateFilterSort('currency')"
+          >
+            Currency
+          </th>
+          <th
+            scope="col"
+            [ngClass]="
+              sortInfo.key === 'bank'
+                ? sortInfo.order === 'asc'
+                  ? 'arrow-down'
+                  : 'arrow-up'
+                : ''
+            "
+            class="px-6 py-3 hover:cursor-pointer font-title"
+            (click)="updateFilterSort('bank')"
+          >
+            Bank
+          </th>
+        </tr>
+      </thead>
+      <svg
+        *ngIf="isRefreshing"
+        class="animate-spin m-4 h-20 w-20 text-black self-center"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <tbody *ngIf="filteredAccountsData$ | async as accounts">
+        <tr
+          class="bg-white border-b"
+          *ngFor="let accounts of accounts; trackBy: trackByAccountId"
+        >
+          <th
+            scope="row"
+            class="px-6 py-4 font-title text-gray-900 whitespace-nowrap"
+          >
+            {{ accounts.id }}
+          </th>
+          <td class="px-6 py-4">
+            {{ accounts.accountId }}
+          </td>
+          <td class="px-6 py-4">
+            {{ accounts.balance }}
+          </td>
+          <td class="px-6 py-4">
+            {{ accounts.currency }}
+          </td>
+          <td class="px-6 py-4">
+            {{ accounts.bank }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <ng-template #columnView>
+    <section class="flex flex-col m-6">
+      <div class="relative inline-block text-left">
+        <div>
+          <button
+            type="button"
+            (click)="toggleSortMenu()"
+            class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+            id="options-menu"
+            aria-expanded="true"
+            aria-haspopup="true"
+          >
+            Sort By
+            <svg
+              class="-mr-1 ml-2 h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+          <ng-container *ngIf="sortInfo$ | async as sortInfo">
+            <div
+              *ngIf="sortMenuOpen"
+              class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="options-menu"
+            >
+              <div class="py-1" role="none">
+                <button
+                  (click)="updateFilterSort('accountId')"
+                  [ngClass]="
+                    sortInfo.key === 'accountId'
+                      ? sortInfo.order === 'asc'
+                        ? 'arrow-down'
+                        : 'arrow-up'
+                      : ''
+                  "
+                  class="font-title w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  Account ID
+                </button>
+                <button
+                  (click)="updateFilterSort('balance')"
+                  [ngClass]="
+                    sortInfo.key === 'balance'
+                      ? sortInfo.order === 'asc'
+                        ? 'arrow-down'
+                        : 'arrow-up'
+                      : ''
+                  "
+                  class="font-title w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  Balance
+                </button>
+                <button
+                  (click)="updateFilterSort('currency')"
+                  [ngClass]="
+                    sortInfo.key === 'currency'
+                      ? sortInfo.order === 'asc'
+                        ? 'arrow-down'
+                        : 'arrow-up'
+                      : ''
+                  "
+                  class="font-title w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  Currency
+                </button>
+                <button
+                  (click)="updateFilterSort('bank')"
+                  [ngClass]="
+                    sortInfo.key === 'bank'
+                      ? sortInfo.order === 'asc'
+                        ? 'arrow-down'
+                        : 'arrow-up'
+                      : ''
+                  "
+                  class="font-title w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  Bank
+                </button>
+              </div>
+            </div></ng-container
+          >
+        </div>
+      </div>
+      <app-filter-input
+        [placeholder]="'Search for account ID'"
+        (filterSearchStringChange)="updateFilterSearchString($event)"
+      ></app-filter-input>
+      <svg
+        *ngIf="isRefreshing"
+        class="animate-spin m-4 h-20 w-20 text-black self-center"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <app-card
+        class="mt-2 mb-2"
+        *ngFor="let account of filteredAccountsData$ | async"
+      >
+        <div class="flex flex-col">
+          <div
+            class="flex w-full border-b border-b-gray-200 justify-between p-3"
+          >
+            <div class="flex flex-col">
+              <div class="font-title">Account ID</div>
+              <div class="font-body">{{ account.accountId }}</div>
+            </div>
+            <div class="flex flex-col">
+              <div class="font-title">Balance</div>
+              <div class="font-body">{{ account.balance }}</div>
+            </div>
+          </div>
+          <div class="flex border-b border-b-gray-200 p-3">
+            <div class="flex flex-col">
+              <div class="font-title">Currency</div>
+              <div class="font-body">{{ account.currency }}</div>
+            </div>
+          </div>
+
+          <div class="flex border-b border-b-gray-200 p-3">
+            <div class="flex flex-col">
+              <div class="font-title">Bank</div>
+              <div class="font-body">{{ account.bank }}</div>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </section>
+  </ng-template>
+</article>
