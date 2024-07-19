@@ -1,11 +1,25 @@
-import { Component, ElementRef, NgZone, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  NgZone,
+  ViewChild,
+} from '@angular/core';
 import {
   AccountData,
   AccountFilters,
   AccountsDataDTO,
   AccountsService,
 } from './accounts.service';
-import { combineLatest, map, Observable, take, tap } from 'rxjs';
+import {
+  combineLatest,
+  fromEvent,
+  map,
+  Observable,
+  take,
+  tap,
+  timer,
+} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../app.service';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +36,9 @@ import { CardComponent } from '../../components/card/card.component';
 })
 export class AccountsComponent {
   @ViewChild('accountsContainer') accountsContainer!: ElementRef;
+  @ViewChild('menuToggleButton') menuToggleButton?: ElementRef;
+  @ViewChild('columnSortMenu') columnSortMenu?: ElementRef;
+
   filteredAccountsData$: Observable<AccountsDataDTO>;
   sortInfo$: Observable<{ key: keyof AccountData; order: 'asc' | 'desc' }>;
   accountsHeaders!: string[];
@@ -126,5 +143,20 @@ export class AccountsComponent {
 
   toggleSortMenu() {
     this.sortMenuOpen = !this.sortMenuOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutsideSortMenu(event: Event) {
+    if (this.menuToggleButton && this.columnSortMenu) {
+      if (
+        this.sortMenuOpen &&
+        !this.columnSortMenu.nativeElement.contains(event.target) &&
+        !this.menuToggleButton.nativeElement.contains(event.target)
+      ) {
+        this.sortMenuOpen = false;
+      } else {
+        this.sortMenuOpen = true;
+      }
+    }
   }
 }
