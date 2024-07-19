@@ -1,25 +1,11 @@
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  NgZone,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import {
   AccountData,
   AccountFilters,
   AccountsDataDTO,
   AccountsService,
 } from './accounts.service';
-import {
-  combineLatest,
-  fromEvent,
-  map,
-  Observable,
-  take,
-  tap,
-  timer,
-} from 'rxjs';
+import { combineLatest, map, Observable, take, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../app.service';
 import { FormsModule } from '@angular/forms';
