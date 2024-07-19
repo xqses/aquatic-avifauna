@@ -1,10 +1,4 @@
 <section class="flex flex-col">
-  <div class="font-body" *ngIf="data.quantity">
-    {{ "Currently owning " + data.quantity }}
-  </div>
-  <div class="font-body" *ngIf="data.price">
-    {{ "Trading at current price - " + data.price }}
-  </div>
   <div #chart *ngIf="chartOptions$ | async as options">
     <apx-chart
       [series]="options.series"
@@ -15,5 +9,13 @@
       [stroke]="options.stroke"
       [title]="options.title"
     ></apx-chart>
+  </div>
+  <div class="font-body text-sm" *ngIf="data.quantity">
+    Currently owned -
+    <span class="text-blue-500 text-base"> {{ data.quantity }}</span>
+  </div>
+  <div class="font-body text-sm" *ngIf="data.quantity">
+    Trading at current price -
+    <span class="text-blue-500 text-base"> {{ data.price }}</span>
   </div>
 </section>
