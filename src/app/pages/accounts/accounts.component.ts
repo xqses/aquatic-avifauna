@@ -5,18 +5,7 @@ import {
   AccountsDataDTO,
   AccountsService,
 } from './accounts.service';
-import {
-  combineLatest,
-  debounceTime,
-  distinctUntilChanged,
-  finalize,
-  fromEvent,
-  map,
-  Observable,
-  take,
-  tap,
-  withLatestFrom,
-} from 'rxjs';
+import { combineLatest, map, Observable, take, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../app.service';
 import { FormsModule } from '@angular/forms';
@@ -39,7 +28,7 @@ export class AccountsComponent {
   isLargeViewport$: Observable<boolean> =
     this.appService.viewportWidthObserver$.pipe(map((width) => width > 800)); // Consider the 800 here to be an arbitrary judgment
 
-  isRefreshing = false;
+  isLoading = true;
   sortMenuOpen = false;
   constructor(
     private accountsService: AccountsService,
@@ -47,8 +36,11 @@ export class AccountsComponent {
   ) {
     this.filteredAccountsData$ = combineLatest([
       this.accountsService.appliedFilters$,
-      this.accountsService.getAccountsData(),
-    ]).pipe(map(([filters, data]) => this.applyFilters(filters, data)));
+      this.accountsService.accountsData$,
+    ]).pipe(
+      map(([filters, data]) => this.applyFilters(filters, data)),
+      tap(() => (this.isLoading = false))
+    );
     this.sortInfo$ = this.accountsService.appliedFilters$.pipe(
       map((filters) => ({ key: filters.sortKey, order: filters.sortOrder }))
     );
@@ -121,13 +113,14 @@ export class AccountsComponent {
   }
 
   refreshAccountData() {
-    this.isRefreshing = true;
+    this.isLoading = true;
+    const newData$ = this.accountsService.refreshAccountsData();
     this.filteredAccountsData$ = combineLatest([
       this.accountsService.appliedFilters$,
-      this.accountsService.getAccountsData(),
+      newData$,
     ]).pipe(
       map(([filters, data]) => this.applyFilters(filters, data)),
-      tap(() => (this.isRefreshing = false)) // wish I could use finalize here, but oh well
+      tap(() => (this.isLoading = false)) // wish I could use finalize here, but oh well
     );
   }
 

@@ -1,12 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
-import {
-  distinctUntilChanged,
-  Observable,
-  shareReplay,
-  tap,
-  throttleTime,
-} from 'rxjs';
+import { distinctUntilChanged, Observable, shareReplay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +12,7 @@ export class AppService {
     private ngZone: NgZone
   ) {}
 
-  isRunningInBrowser() {
+  get isRunningInBrowser() {
     return isPlatformBrowser(this.platformId);
   }
 

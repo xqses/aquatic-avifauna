@@ -3,13 +3,12 @@ import {
   GetRequestOptions,
   HttpService,
 } from '../../core/services/http.service';
-import { psk } from '../../core/consts';
+import { PSK } from '../../core/consts';
 import {
   interval,
   map,
   Observable,
   scan,
-  share,
   shareReplay,
   startWith,
   switchMap,
@@ -44,7 +43,7 @@ export interface Position {
 }
 
 // Fake "position" service
-const serviceHost = 'https://aquatic-avifauna.dahlstedtolle.workers.dev';
+const SERVICE_HOST = 'https://aquatic-avifauna.dahlstedtolle.workers.dev';
 
 @Injectable({
   providedIn: 'root',
@@ -60,8 +59,8 @@ export class PositionsService {
 
   getPositionData() {
     const options: GetRequestOptions = {
-      baseUrl: serviceHost,
-      headers: { 'X-Custom-PSK': psk },
+      baseUrl: SERVICE_HOST,
+      headers: { 'X-Custom-PSK': PSK },
     };
     return this.httpService.get<PositionDataDTO>(options).pipe(shareReplay(1));
   }

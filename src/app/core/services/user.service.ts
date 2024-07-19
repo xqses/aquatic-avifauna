@@ -1,6 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AppService } from '../../app.service';
-import { AppPath, paths } from '../consts';
+import { AppPath, PATHS } from '../consts';
 import { BehaviorSubject, of } from 'rxjs';
 
 /**
@@ -16,7 +16,7 @@ export class UserService {
   isAuthenticated$ = this.authSubject$.asObservable();
 
   constructor(private appService: AppService) {
-    if (this.appService.isRunningInBrowser()) {
+    if (this.appService.isRunningInBrowser) {
       const authInfo = localStorage.getItem('isAuthenticated');
       const userInfo = localStorage.getItem('userInfo');
       if (authInfo && userInfo && JSON.parse(authInfo) && userInfo) {
@@ -33,13 +33,13 @@ export class UserService {
    * Users may have granular access to the app, so we should only allow navigation to selected components if we can resolve that the user should be able to navigate there
    */
   resolveAvailablePaths(): AppPath[] {
-    return paths;
+    return PATHS;
   }
 
   setUser(authenticated: boolean, username: string) {
     this.authSubject$.next(authenticated);
     this.userSubject$.next(username);
-    if (this.appService.isRunningInBrowser()) {
+    if (this.appService.isRunningInBrowser) {
       localStorage.setItem('isAuthenticated', JSON.stringify(authenticated));
       localStorage.setItem('userInfo', username);
     }

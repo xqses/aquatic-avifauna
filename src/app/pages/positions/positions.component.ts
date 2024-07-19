@@ -1,19 +1,7 @@
 import { Component } from '@angular/core';
 import { CardComponent } from '../../components/card/card.component';
-import {
-  Position,
-  PositionDataDTO,
-  PositionsService,
-} from './positions.service';
-import {
-  interval,
-  map,
-  Observable,
-  scan,
-  shareReplay,
-  startWith,
-  switchMap,
-} from 'rxjs';
+import { Position, PositionsService } from './positions.service';
+import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PositionComponent } from './position/position.component';
 

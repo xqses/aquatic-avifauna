@@ -1,12 +1,12 @@
 // Not really secret (since it is visible in the HTTP request header)
-const psk = '4a291a7572f99f069399cb5658ac2b80';
+const PSK = '4a291a7572f99f069399cb5658ac2b80';
 
 interface AppPath {
   route: string;
   name: string;
 }
 
-const paths: AppPath[] = [
+const PATHS: AppPath[] = [
   {
     route: '/',
     name: 'Home',
@@ -15,4 +15,4 @@ const paths: AppPath[] = [
   { route: '/positions', name: 'Positions' },
 ];
 
-export { psk, AppPath, paths };
+export { PSK, AppPath, PATHS };

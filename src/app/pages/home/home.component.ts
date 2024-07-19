@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../app.service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 
-const wideViewportGreeting =
+const WIDE_VIEWPORT_GREETING =
   'Use the navigation links above to explore your portfolio';
-const narrowViewportGreeting =
+const NARROW_VIEWPORT_GREETING =
   'Use the navigation menu to explore your portfolio';
 @Component({
   selector: 'app-home',
@@ -22,10 +22,12 @@ export class HomeComponent {
     private userService: UserService,
     private appService: AppService
   ) {
-    this.greetingText$ = this.appService.viewportWidthObserver$.pipe(
-      map((width) =>
-        width >= 768 ? wideViewportGreeting : narrowViewportGreeting
-      )
-    );
+    this.greetingText$ = this.appService.isRunningInBrowser
+      ? this.appService.viewportWidthObserver$.pipe(
+          map((width) =>
+            width >= 768 ? WIDE_VIEWPORT_GREETING : NARROW_VIEWPORT_GREETING
+          )
+        )
+      : of(WIDE_VIEWPORT_GREETING);
   }
 }

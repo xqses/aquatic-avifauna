@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
 import { AccessModes } from '../enums';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 export const ERROR_ROUTE = 'error';
 

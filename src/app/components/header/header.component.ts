@@ -1,18 +1,6 @@
 import { Component } from '@angular/core';
 import { NavigationService } from '../../core/services/navigation.service';
-import {
-  BehaviorSubject,
-  defer,
-  map,
-  merge,
-  Observable,
-  of,
-  Subject,
-  switchMap,
-  take,
-  tap,
-  withLatestFrom,
-} from 'rxjs';
+import { BehaviorSubject, map, merge, Observable, of, take } from 'rxjs';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { AppPath } from '../../core/consts';
@@ -39,7 +27,10 @@ export class HeaderComponent {
       .subscribe((menuOpen) => this.menuOpenSubject$.next(!menuOpen));
   }
 
-  availablePaths$: Observable<AppPath[]>; // This would probably be an Observable in practice since we would reach out to an API to check user privileges
+  availablePaths$: Observable<AppPath[]>;
+  // This would probably be an Observable in practice since we would reach out to an API to check user privileges
+
+  runningInBrowser = this.appService.isRunningInBrowser;
   constructor(
     private appService: AppService,
     private navigationService: NavigationService,

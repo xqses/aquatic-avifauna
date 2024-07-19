@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../../core/services/http.service';
-import { BehaviorSubject, Observable, ReplaySubject, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, shareReplay } from 'rxjs';
 import { AppService } from '../../app.service';
 
 export interface AccountData {
@@ -32,6 +32,9 @@ const DEFAULT_FILTERS: AccountFilters = {
 export class AccountsService {
   filterSubject$: BehaviorSubject<AccountFilters>;
   appliedFilters$: Observable<AccountFilters>;
+  accountsData$: Observable<AccountsDataDTO> = this.getAccountsData().pipe(
+    shareReplay(1)
+  );
 
   constructor(
     private httpService: HttpService,
@@ -47,7 +50,7 @@ export class AccountsService {
   }
 
   initializeFilters(): BehaviorSubject<AccountFilters> {
-    if (this.appService.isRunningInBrowser()) {
+    if (this.appService.isRunningInBrowser) {
       const filters = localStorage.getItem('accountFilters');
       if (filters) {
         const parsedFilters = JSON.parse(filters);
@@ -59,8 +62,12 @@ export class AccountsService {
 
   setFilters(newFilters: AccountFilters) {
     this.filterSubject$.next(newFilters);
-    if (this.appService.isRunningInBrowser()) {
+    if (this.appService.isRunningInBrowser) {
       localStorage.setItem('accountFilters', JSON.stringify(newFilters));
     }
+  }
+
+  refreshAccountsData() {
+    return this.getAccountsData().pipe(shareReplay(1));
   }
 }
