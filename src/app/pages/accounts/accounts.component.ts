@@ -21,7 +21,6 @@ import { CardComponent } from '../../components/card/card.component';
   styleUrl: './accounts.component.css',
 })
 export class AccountsComponent {
-  @ViewChild('accountsContainer') accountsContainer!: ElementRef;
   @ViewChild('menuToggleButton') menuToggleButton?: ElementRef;
   @ViewChild('columnSortMenu') columnSortMenu?: ElementRef;
 
@@ -31,6 +30,7 @@ export class AccountsComponent {
   isLargeViewport$: Observable<boolean> =
     this.appService.viewportWidthObserver$.pipe(map((width) => width > 800)); // Consider the 800 here to be an arbitrary judgment
 
+  isRefreshing = false;
   isLoading = true;
   sortMenuOpen = false;
   constructor(
@@ -116,14 +116,14 @@ export class AccountsComponent {
   }
 
   refreshAccountData() {
-    this.isLoading = true;
+    this.isRefreshing = true;
     const newData$ = this.accountsService.refreshAccountsData();
     this.filteredAccountsData$ = combineLatest([
       this.accountsService.appliedFilters$,
       newData$,
     ]).pipe(
       map(([filters, data]) => this.applyFilters(filters, data)),
-      tap(() => (this.isLoading = false)) // wish I could use finalize here, but oh well
+      tap(() => (this.isRefreshing = false)) // wish I could use finalize here, but oh well
     );
   }
 
