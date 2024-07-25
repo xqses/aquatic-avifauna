@@ -11,6 +11,7 @@ export const routes: Routes = [
       import('./pages/home/home.component').then((mod) => mod.HomeComponent),
     canActivate: [homeGuard],
   },
+  { path: '**', redirectTo: 'error' },
   {
     path: 'accounts',
     loadComponent: () =>
@@ -38,5 +39,4 @@ export const routes: Routes = [
       import('./pages/login/login.component').then((mod) => mod.LoginComponent),
     canActivate: [loginGuard],
   },
-  { path: '*', redirectTo: 'error' },
 ];
