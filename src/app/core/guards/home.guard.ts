@@ -10,8 +10,8 @@ export const homeGuard: CanActivateFn = async (route, state) => {
   if (accessMode === AccessModes.Authorized) {
     return true;
   } else if (accessMode === AccessModes.NotAuthorized) {
-    return router.createUrlTree(['/error']);
+    return router.createUrlTree(['error']);
   } else {
-    return router.createUrlTree(['/login']);
+    return router.createUrlTree(['login']);
   }
 };
